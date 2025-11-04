@@ -1,26 +1,33 @@
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import type { Meta, StoryObj } from '@storybook/react';
 import KanbanColumn from './KanbanColumn';
 import { sampleColumns, sampleTasks } from './sampleData';
 
-const column = sampleColumns[0];
-const tasks = column.taskIds.map((id) => sampleTasks[id]).filter(Boolean);
-
 const meta: Meta<typeof KanbanColumn> = {
-  title: 'Components/Column', // ✅ Clean sidebar name
+  title: 'Components/KanbanColumn',
   component: KanbanColumn,
-  tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <DndProvider backend={HTML5Backend}>
+        <Story />
+      </DndProvider>
+    ),
+  ],
 };
 
 export default meta;
 type Story = StoryObj<typeof KanbanColumn>;
 
-export const Todo: Story = {
-  args: {
-    column,
-    tasks,
-    onTaskMove: () => console.log('Task moved'),
-    onTaskCreate: () => console.log('Task created'),
-    onTaskUpdate: () => console.log('Task updated'),
-    onTaskDelete: () => console.log('Task deleted'),
-  },
+export const Default: Story = {
+  render: () => (
+    <KanbanColumn
+      column={sampleColumns[0]}
+      tasks={Object.values(sampleTasks).filter((t) => t.status === sampleColumns[0].id)}
+      onTaskMove={() => {}}
+      onTaskCreate={() => {}}
+      onTaskUpdate={() => {}}
+      onTaskDelete={() => {}}
+    />
+  ),
 };
